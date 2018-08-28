@@ -73,6 +73,12 @@ main-horizontal
 main-vertical
 tiled
 
+* 如果不满足 layout 的默认值，可自定义
+* 首先调整好每个窗口中的 Pane 然后 PREFIX d 分离 session
+* 输入 tmux list-windows 命令
+* 将 layout 后的参数复制
+* 然后打开工程配置文件，替换 layout 参数即可
+
 * 多命令
     * 当某个Pane需要执行多命令时，官方不推荐使用&&或;的形式。可以采用如下方式发送命令。
 
@@ -92,3 +98,5 @@ windows:
     * tmuxinator delete [name]	
 * 删除当前所有的项目
     * tmuxinator implode	
+
+
