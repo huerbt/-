@@ -1,0 +1,94 @@
+  = tmuxGuide =
+  * 前缀 PREFIX = CTRL+a
+  * 新建会话
+      * tmux new -s 会话名
+  * 分离会话
+      * PREFIX + d
+  * 列出当前存在的会话
+      * tmux ls
+  * 链接某个会话
+      * tmux attach -t 会话名
+  * 杀死会话
+      * tmux kill-session -t 会话名
+  * 新建窗口
+      * PREFIX c
+  * 窗口重命名
+      * PREFIX ，（前缀+逗号）
+  * 窗口之间的切换
+      * 方式一：PREFIX n 或者 p 
+      * 方式二：PREFIX 数字 窗口的序列号
+      * 方式三：PREFIX w 可视化窗口列
+  * 关闭窗口
+      * PREFIX &
+  * 新建面板
+      * tmux new -s panes
+      * PREFIX % 左右各一半（PREFIX |）
+      * PREFIX ”上下各一半（PREFIX -）
+  * 在面板中切换
+      * PREFIX o 或箭头工具切换
+  * 调整面板
+      * PREFIX J  水平分割线向下移动
+      * PREFIX K  水平分割线向上移动
+  * 最大化和恢复面板
+      * PREFIX z
+  * 关闭面板
+      * PREFIX X（大写 X）
+  * 复制与粘贴
+      * PREFIX [ 进入复制模式
+      * 进入复制模式然后把光标移动到要选择的文本的开始处。然后按下 SPACE 键（空格键，译者注）然后移动光标到文本的尾部。当我们按下 ENTER 键后，这段被选择的文本就会被复制到一个粘贴缓存区中
+      * 要粘贴刚才捕捉的内容，则切换到粘贴模式然后按下 PREFIX ] 键。
+
+ = tmuxinatorGuide =
+* 别名
+    * 在 zsh 中给 tmuxinator 提供别名mux
+        1、在.zshrc中增加
+            alias mux='tmuxinator'
+        
+> mux n ws      # 创建工程ws
+> mux o ws      # 打开工程ws的配置文件
+> mux e ws      # 同上
+> mux c ws ws1  # 复制ws工程到ws1
+> mux d ws      # 删除ws工程
+> mux l         # 显示所有工程
+> mux ws        # 开启ws工程
+
+name: ws # session名称
+root: ~/ # 工程根目录，活动pane会首先cd到此目录
+
+windows:
+  - editor: # 第1个名为editor的window
+      layout: main-vertical # pane的布局
+      panes: # 各个pane
+        - vim # 第一个pane运行vim命令
+        - guard # 第二个pane运行guard命令
+  - server: bundle exec rails s # 第2个名为server的window，运行命令为bundle
+  - logs: tail -f log/development.log # 第3个名为logs的window，运行命令为tail
+
+
+工程配置中的layout项，有5个默认的值。
+
+even-horizontal
+even-vertical
+main-horizontal
+main-vertical
+tiled
+
+* 多命令
+    * 当某个Pane需要执行多命令时，官方不推荐使用&&或;的形式。可以采用如下方式发送命令。
+
+windows:
+  - editor:
+      layout: main-vertical
+      panes:
+        - list: # 多命令方式
+          - cd ~/temp
+          - ls -la
+        - # empty
+* 列出当前的项目
+    * tmuxinator list	
+* 复制一个项目配置文件
+    * tmuxinator copy [source] [destination]	
+* 删除指定的项目
+    * tmuxinator delete [name]	
+* 删除当前所有的项目
+    * tmuxinator implode	
