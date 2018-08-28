@@ -1,0 +1,26 @@
+" 将Vundle加入运行时路径中(Runtime path)
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+"let Vundle manage Vundle,required"
+Plugin 'gamrik/Vundle.vim'
+
+"Vundle List Here"
+Plugin 'vimwiki/vimwiki'
+
+Plugin 'Valloric/YouCompleteMe'
+
+
+"美化状态栏，可以显示当前的虚拟环境、Git分支、正在编辑的文件等信息。
+Plugin 'vim-airline/vim-airline'
+
+"python是靠代码缩进来判断代码块的，缩进指示线还是很方便的。
+Plugin 'Yggdroot/indentLine'
+
+Plugin 'tomasr/molokai'
+
+Plugin 'scrooloose/nerdtree'
+
+Plugin 'majutsushi/tagbar'
+
+call vundle#end()
+filetype plugin indent on
