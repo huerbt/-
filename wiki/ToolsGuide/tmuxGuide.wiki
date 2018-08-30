@@ -51,6 +51,8 @@
 > mux d ws      # 删除ws工程
 > mux l         # 显示所有工程
 > mux ws        # 开启ws工程
+> mux stop ws   # 更新了窗口，要先 stop 然后在 satrat
+> mux start ws  # 配合上面
 
 name: ws # session名称
 root: ~/ # 工程根目录，活动pane会首先cd到此目录

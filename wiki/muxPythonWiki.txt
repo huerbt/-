@@ -1,0 +1,122 @@
+# /Users/hu/.config/tmuxinator/pythonWiki.yml
+
+name: pythonWiki
+root: ~/threeEverthing/wiki/pythonGuide/
+
+# Optional tmux socket
+# socket_name: foo
+
+# Runs before everything. Use it to start daemons etc.
+# pre: sudo /etc/rc.d/mysqld start
+
+# Project hooks
+# Runs on project start, always
+# on_project_start: command
+# Run on project start, the first time
+# on_project_first_start: command
+# Run on project start, after the first time
+# on_project_restart: command
+# Run on project exit ( detaching from tmux session )
+# on_project_exit: command
+# Run on project stop
+# on_project_stop: command
+
+# Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
+# pre_window: rbenv shell 2.0.0-p247
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Change the command to call tmux.  This can be used by derivatives/wrappers like byobu.
+# tmux_command: byobu
+
+# Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
+# startup_window: editor
+
+# Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
+# startup_pane: 1
+
+# Controls whether the tmux session should be attached to automatically. Defaults to true.
+# attach: false
+
+# Runs after everything. Use it to attach to tmux with custom options etc.
+# post: tmux -CC attach -t pythonWiki
+
+windows:
+  - 字符串:
+      layout: main-vertical
+      # Synchronize all panes of this window, can be enabled before or after the pane commands run.
+      # 'before' represents legacy functionality and will be deprecated in a future release, in favour of 'after'
+      # synchronize: after
+      panes:
+        - vim ./stringGuide.wiki
+
+  - 基本容器:
+      layout: main-vertical
+      panes:
+        - vim ./containerGuide.wiki
+  - 流程控制:
+      layout: main-vertical
+      panes:
+        - vim ./conditionGuide.wiki
+  - 函数:
+      layout: main-vertical
+      panes:
+        - vim ./functionGuide.wiki
+  - 面向对象:
+      layout: main-vertical
+      panes:
+        - vim ./ooGuide.wiki
+  - 异常处理:
+      layout: main-vertical
+      panes:
+        - vim ./exceptionGuide.wiki
+  - 模块化打包部署:
+      layout: main-vertical
+      panes:
+        - vim ./setupGuide.wiki
+  - 代码文档:
+      layout: main-vertical
+      panes:
+        - vim ./docGuide.wiki
+  - 测试:
+      layout: main-vertical
+      panes:
+        - vim ./testGuide.wiki
+  - 性能与重构:
+      layout: main-vertical
+      panes:
+        - vim ./performGuide.wiki
+  - 设计模式:
+      layout: main-vertical
+      panes:
+        - vim ./DesignPatternGuide.wiki
+  - 图形界面:
+      layout: main-vertical
+      panes:
+        - vim ./performGuide.wiki
+  - numpy:
+      layout: main-vertical
+      panes:
+        - vim ./numpyGuide.wiki
+  - pandas:
+      layout: main-vertical
+      panes:
+        - vim ./pandasGuide.wiki
+  - 数据可视化:
+      layout: main-vertical
+      panes:
+        - vim ./matplotlibGuide.wiki
+  - 网络:
+      layout: main-vertical
+      panes:
+        - vim ./netWorkGuide.wiki
+  - 并发:
+      layout: main-vertical
+      panes:
+        - vim ./paralleGuidel.wiki
+  - 数据存储:
+      layout: main-vertical
+      panes:
+        - vim ./saveDataGuide.wiki
+
