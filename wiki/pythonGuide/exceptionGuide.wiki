@@ -1,0 +1,97 @@
+= 异常=
+== Summary ==
+是一个对象，它提供了程序运行中检测到并提示出错误的信息内容。
+== Objects= ==
+
+== Procedural knowledge ==
+
+=== Effect ===
+- 抛出异常的基本形式[[exceptionGuide#抛出异常的基本形式]]
+- 没有发生任何异常才会执行的程序[[exceptionGuide#没有发生任何异常才会执行的程序]]
+- 无论是否有异常抛出都要执行的程序[[exceptionGuide#无论是否有异常抛出都要执行的程序]]
+    通常被用来在离开函数之前做一些清理任务，比如关闭数据库或文件的连接
+- 只捕捉指定类型的异常[[exceptionGuide#只捕捉指定类型的异常]]
+- 捕捉自定义类型的异常[[exceptionGuide#捕捉自定义类型的异常]]
+- 
+== Programma ==
+
+=== 抛出异常的基本形式===
+{{{!#python
+# 抛出异常的基本形式
+try:
+    容易引起错误的代码块（尽量短，最好是只有一行代码）
+except:
+    发生异常后的处理代码
+}}}
+
+=== 没有发生任何异常才会执行的程序===
+{{{!#python
+try:
+    容易引起错误的代码块（尽量短，最好是只有一行代码）
+except:
+    发生异常后的处理代码
+else:
+    *没有发生任何异常才会执行的程序*
+}}}
+
+=== 无论是否有异常抛出都要执行的程序===
+{{{!#python 
+try:
+    容易引起错误的代码块（尽量短，最好是只有一行代码）
+except:
+    发生异常后的处理代码
+finally:
+    *无论是否发生任何异常都会执行的程序*
+
+}}}
+
+=== 只捕捉指定类型的异常 ===
+{{{!#python
+try:
+    容易引起错误的代码块（尽量短，最好是只有一行代码）
+except 指定的异常类:
+    发生指定的异常后的处理代码
+
+}}}
+
+=== 捕捉自定义类型的异常===
+为什么我们需要自定义异常类，你可以自己创建一个描述性功能的名字的异常类，这让我们容易判断异常类使用的目的。
+{{{!#python
+#1、编写一个自定义的异常类，继承自 Exception
+class MyError(Exception):
+    def __init__(self,message='',code=000):
+        super().__init__(message)
+        self.error_message = '~'*50 + '\n'
+        self.error_dict = {
+            000:"000未指定的错误"
+            101:"101的错误说明"
+            102:"102的错误说明"
+        }
+    try:
+        self.error_message += self.error_dict[code]
+    except KeyError:
+        self.error_message += self.error_dict[000]
+    self.error_message +='\n' + '~'*50
+
+}}}
+
+{{{!#python
+#2、引发异常的写法
+
+if 引发条件为 TRUE:
+    raise MyError("引发异常的条件说明",101)
+
+#3、在其他地方也可以使用异常，前提是间接包含了#2的内容
+try:
+    与#2的相关内容
+except MyError as e:
+    print(e.error_message)
+
+}}}
+== Declarative knowledge ==
+
+=== Static property ===
+[object].name = XXX
+self.基类=BaseException
+self.一般继承自 = Exception 
+
