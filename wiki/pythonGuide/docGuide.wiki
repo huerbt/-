@@ -1,0 +1,240 @@
+= 代码文档=
+== Summary ==
+有三个层次的文档，最外层项目级别的文档，第二层 API
+级别的文档，第三层以代码注释形式
+== Objects ==
+第一层.理论手册
+
+第一层.安装说明[README, INSTALL, 用户和开发人员指南]
+
+第一层.LICENSE [授权, 版权]
+
+第一层.TODO
+
+第一层.RELEASENOTES [版本说明]
+
+第二层.API 级别的文档[文档字符串]
+    文档字符串是用来描述类、方法、函数或模块的一个字符串。文档字符串应该使用
+    Sphinx 提供的 reStructedText 来写
+    
+reStructedText[[docGuide#reStructedText]]
+
+Sphinx[[docGuide#Sphinx]]
+
+第三层.注释
+    注释只是详细描述一段代码的内部逻辑。
+
+==Procedural knowledge==
+=== Effect ===
+- 显示文档字符串[[docGuide#显示文档字符串]]
+=== Programma ===
+==== 显示文档字符串 ====
+__doc__方法
+{{{!#python
+def get_number():
+    """文档字符串的位置"""
+    return 10
+get_number.__doc__
+
+}}}
+==Declarative knowledge ==
+
+=== Static property ===
+第一层.理论手册.必要信息 = [代码的科学目标和源谱, 理论基础]
+第一层.安装说明.必要信息 = [最新版本号及发布时间,about,安装说明]
+第二层.文档字符串.必要信息 = [参数, 行为, 使用方法]
+
+
+
+
+= reStructedText =
+== Summary ==
+ 标记语法，主要用于 python 文档。
+== Objects ==
+标题[[docGuide#标题]]
+
+段落[[docGuide#段落]]
+
+内联标记 [粗体, 斜体] [[docGuide#内联标记]]
+
+代码片段 [[docGuide#代码片段]]
+
+数学公式[[docGuide#数学公式]]
+
+符号列表 [项目符号列表,编号列表] [[docGuide#符号列表]]
+
+文档字符串常用特征[[docGuide#文档字符串常用特征]]
+
+== Procedural knowledge ==
+=== Effect ===
+=== Programma ===
+== Declarative knowledge ==
+=== Static property ===
+=== Samples ===
+- 标题：用任何非字母数字组成的下划线进行装饰，装饰线应与章节的标题长度相同或更长，如下：
+{{{!#RST
+1. Introduction
+----------------
+This is a text
+1.1 Intro A
+~~~~~~~~~~~
+1.1.1 Inside Intro A
+.....................
+2. Documentation
+----------------
+Documentation can be found at...
+2.1 Documentation A
+~~~~~~~~~~~~~~~~~~~~
+}}}
+
+- 段落：完成后在其结尾处至少留一条空行
+{{{!#RST
+段落1.XXXXXXXXXXXXX
+XXXXXXXXXXXX。
+
+段落2.XXXXXXXXXXXXX
+XXXXXXXXXXXX。
+
+}}}
+
+- 粗体：用两个星号修饰
+{{{!#RST
+**粗体**
+}}}
+- 斜体：用一个星号修饰
+{{{!#RST
+*斜体*
+}}}
+
+- 代码片段：
+请注意 code-block
+和前面的两个点之间有个空格。在实际代码之前，指令之后应该有空行。
+{{{!#RST
+.. code-block:: python
+
+    python 的代码块，如果想实现代码高亮需要一个 Pyments 的 python 包。
+}}}
+
+- 数学公式：注意需要在数学公式前，后都留一个空格
+{{{!#RST
+.. math::
+ ax^3 + bx^2 + cx + d =0 
+ 
+ }}}
+
+- 符号列表：可以使用* + - 数字。需要至少一个空行
+
+- 文档字符串常用特征：
+| 信息域和指令  | 描述                                     |
+| :param        | 参数描述                                 |
+| :arg          | 用来描述输入参数                         |
+| :key          | 关键字描述                               |
+| :type         | 形参或实参的类型                         |
+| :ivar或者:var | 任何变量的描述，通常描述实例变量         |
+| :vartype      | 变量类型描述                             |
+| :py:meth:     | 用来交叉引用 Python 的方法               |
+| :py:func:     | 用来交叉引用 Python 的函数               |
+| :py:class:    | 用来交叉引用 Python 的类                 |
+| :py:attr:     | 用来交叉引用 Python 的属性               |
+| .. code::     | 包含任何示例代码                         |
+| .. todo::     | 列出 TODO 事项                           |
+| .. note::     | 将任何值得提及的内容文档化                                         |
+| .. warning::  | 书写警告信息                             |
+| .. seealso::  | 引用编写文档字符串时任何与代码相关的内容 |
+|               |                                          |
+**参数描述可以使用如下形式**
+{{{!#RST
+:arg 类型 参数名: 描述
+}}}
+
+样例如下：
+{{{!#RST
+class Hut:
+    """Class to create hut objects in the game Attack of the Orcs
+    
+    :arg int number: Hut number to be assigned
+    :arg AbstractGameUnit occupant: The new occupant of the Hut
+    
+    :ivar int number: A number assigned to this hut
+    :ivar boolean is_acquired: A boolean flag to indicate if the
+                  hut is acquired. In the current implementation
+                  this is viewed from the player's perspective.
+    :ivar AbstractGameUnit occupant: The occupant of this hut.
+                       Needs to be an instance of the subclass of
+                       `AbstractGameUnit`.
+                       
+    .. seealso:: Where it is used --
+            :py:meth:`attackoftheorcs.AttackOfTheOrcs.setup_game_scenario`
+    """
+    
+}}}
+
+谷歌 Python 分格指南
+{{{!#RST
+class Hut:
+    """Class to create hut objects in the game Attack of the Orcs
+    
+    Args:
+        number (int): Hut number to be assigned
+        occupant (AbstractGameUnit) : The new occupant of the Hut
+    
+    Attributes:
+        number (int): A number assigned to this hut
+        is_acquired (boolean): A boolean flag to indicate if the
+                  hut is acquired. In the current implementation
+                  this is viewed from the player's perspective.
+         occupant (AbstractGameUnit): The occupant of this hut.
+                       Needs to be an instance of the subclass of
+                       `AbstractGameUnit`.
+                       
+    .. seealso:: Where it is used --
+            :py:meth:`attackoftheorcs.AttackOfTheOrcs.setup_game_scenario`
+    """
+    
+}}}
+
+
+= Sphinx =
+== Summary ==
+Sphinx是一个 Python 事实上的标准文档生成工具，可以生成各种格式文档如 HTML，PDF 等
+== Objects ==
+
+== Procedural knowledge ==
+=== Effect ===
+=== Programma ===
+1、安装
+~ pip install Sphinx
+    这个命令创建了4个可执行脚本：sphinx-autogen, sphinx-apidoc, sphinx-build, 和 sphinx-quickstart
+    
+    如果需要代码高亮可以安装 pygments
+    ~ pip install pygments
+2、使用 cd 命令进入源目录
+3、运行 sphinx-quickstart
+~ sphinx-quickstart
+    它会创建一个用来存放文档的目录，同时创建一个默认的配置文件 conf.py
+    当你运行这个工具时，系统会询问几个基本问题来完成设置，选择大多数问题的默认答案
+4、更新 conf.py
+这个配置文件定义了所有关于 Sphinx 的定制化信息。在 conf.py 中配置如下：
+extensions = [ 'sphinx.ext.autodoc','sphinx.ext.todo',]
+由于我们的源代码不在文档目录中，所以我们需要将下面这行代码注释掉
+{{{!#python
+#sys.path.insert(0, os.path.abspath('.'))
+}}}
+还需要制定系统中包含项目包的完整路径，如下
+{{{!#python
+sys.path.insert(0, os.path.abspath('项目的完整路径如~/book/prj1'))
+}}}
+
+5、运行 sphinx-apidoc
+创建文档源文件，这个工具通过使用 autodoc 扩展从文档字符串中抽取文档信息。语法如下：
+~ sphinx-apidoc [options] -o <outputdir> <sourcedir> [pathnames ...]
+    在运行之前确保使用 cd 命令进入当前 docs 目录中。
+~ sphinx-apidoc -o source/ /home/bool/proj1
+输出目录是 source 的目录。
+
+6、建立文档
+在 docs 目录中运行
+~ sphinx-build source build
+
+== Declarative knowledge ==
+=== Static property ===
