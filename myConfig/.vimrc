@@ -1,4 +1,10 @@
 execute pathogen#infect()
+"在选中模式下，ctrl-x 或者 ctrl-c 就能复制选择区到osx的粘贴板了 
+vmap <C-x> :!pbcopy<CR>   
+vmap <C-c> :w !pbcopy<CR><CR>
+
+" 为 pydoc3 添加以下配置（python v3.x 文档）。在正常模式下创建 H 键的映射：
+nnoremap <buffer> H :<C-u>execute "!pydoc3 " . expand("<cword>")<CR>
 
 " 基于缩进或语法进行代码折叠
 set foldmethod=indent
@@ -209,6 +215,39 @@ au FileType python inoremap <buffer>> <c-r>=EqualSign('>')<CR>
 au FileType python inoremap <buffer>< <c-r>=EqualSign('<')<CR>
 au FileType python inoremap <buffer>: <c-r>=Swap()<CR>
 au FileType python inoremap <buffer>, ,<space>
+
+""""""""""""""""""""""""""""""""""""""""
+"实现+-*/前后自动添加空格，逗号后面自动添加空格，适用python
+"支持+= -+ *= /+格式
+function! EqualSign(char)
+    if a:char  =~ '='  && getline('.') =~ ".*("
+        return a:char
+    endif
+    let ex1 = getline('.')[col('.') - 3]
+    let ex2 = getline('.')[col('.') - 2]
+    if ex1 =~ "[-=+><>\/\*]"
+        if ex2 !~ "\s"
+            return "\<ESC>i".a:char."\<SPACE>"
+        else
+            return "\<ESC>xa".a:char."\<SPACE>"
+        endif
+    else
+        if ex2 !~ "\s"
+            return "\<SPACE>".a:char."\<SPACE>\<ESC>a"
+        else
+            return a:char."\<SPACE>\<ESC>a"
+        endif
+    endif
+endf 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"实现光标位置自动交换:) -->  ):
+function! Swap()
+    if getline('.')[col('.') - 1] =~ ")"
+        return "\<ESC>la:"
+    else
+        return ":"
+    endif
+endf
 
 " Calendar
 map <F8> :Calendar<cr>
