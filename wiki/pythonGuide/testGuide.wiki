@@ -1,0 +1,425 @@
+= 基础测试 unittest =
+== Summary ==
+软件测试应该涵盖普通行为和极端行为，但不用覆盖其中的每个值
+*对于比较浮点值的预期结果和观察结果时，应使用近似相等。
+== Objects ==
+测试固件[TestCase.setUp, TestCase.tearDown]
+
+测试用例
+
+测试套件：将各种测试用例组合在一起时，就是测试套件[[testGuide#使用测试套件]]
+
+
+
+== Procedural knowledge ==
+=== Effect ===
+- 为应用程序编写单元测试[[testGuide#为应用程序编写单元测试]]
+- 使用测试套件[[testGuide#使用测试套件]]
+- 通过装饰器（修饰符）操作测试方法[[testGuide#通过装饰器（修饰符）操作测试方法]]
+- 在单元测试中使用模拟(Mock)[[testGuide#在单元测试中使用模拟(Mock)]]
+=== Programma ===
+==== 为应用程序编写单元测试 ====
+- 创建测试包
+1、在和其他代码同样的目录下创建一个叫 test 的目录,通常是源目录的镜像目录结构。
+2、在 test 目录下，新建一个空的__init__.py
+文件
+3、在 test 目录下，新建一个以 test 开头的模块。比如 test_projname.py
+4、在 test_projname.py 文件中导入 unittest 和其他需要的项目模块
+5、编写测试用例
+6、运行单元测试
+    python -m unittest test.test_projname
+    -m 是 python 的内置命令选项，它允许你将一个库模块作为一个脚本来运行，参数
+    test.test_projname 表示 test/test_projname.py 文件
+    
+7、只运行具体的某个单元测试
+    python -m unittest test.test_projname.TestProjName.test_指定的测试方法
+    该命令行的参数可以读作包名.模块名.类名.方法名
+    
+8、批量执行单元测试
+    test 测试目录中包含多个测试模块，同事运行该目录下的所有测试。
+    python -m unittest discover
+
+==== 使用测试套件====
+测试套件可以非常方便的对测试用例进行分组
+unittest 模块的额 makeSuite 函数可以用来创建一个 TestSuite 类的实例
+- 第一步准备测试用例
+{{{!#python 
+import unittest
+
+class MyUnitTestA(unittest.TestCase): 
+    def test_a2(self):
+        print("in test_a2")
+        self.assertEqual(1+1, 2)    
+    
+    def test_a1(self):
+        print(:in test_a1")
+        self.assertTrue(1+1 == 2)
+    
+    def will_not_be_called(self):
+        print("this method will not be called automatically")
+
+class MyUnitTestB(unittest.TestCase): 
+    def test_b2(self):
+        print("in test_b2")
+        self.assertNotEqual(4*4, 15)
+    
+    def test_b1(self):
+        print(:in test_b1")
+        self.assertTrue(4+4 == 8)
+    
+    def not_called_by_default(self):
+        print("this method will not be called automatically")
+
+}}}
+
+- 第二步定义测试套件
+{{{!#python
+def suite():
+    print("Inside suite()...")
+    
+    # Create a test suite by collecting all test cases defined
+    # in MyUnitTestA. By default it only looks for methods starting
+    # with test*
+    suite_a = unittest.makeSuite(MyUnitTestA)
+    
+    # Similarly. Create suite_b using testcases from MyUnitTestB
+    suite_b = unittest.makeSuite(MyUnitTestB)
+    
+    # Add a new testcase to suite_b.
+    suite_b.addTest(MyUnitTestB("not_called_by_default"))
+    
+    # Return a composite test suite containing suite_a and suite_b
+    return unittest.TestSuite(suite_a,suite_b)
+
+}}}
+- 第三部运行
+{{{!#python
+
+if __name__ == '__main__':
+    unittest.main(defaultTest='suite')
+}}}
+
+==== 在单元测试中使用模拟(Mock) ====
+    在某些情况下，代码可能存在依赖关系，甚至是需要重构才能访问该功能，或者要测试的功能里某些辅助功能耗费时间较长，你可以使用Mock来模拟
+
+- 第一步构建被测试功能
+{{{!#python
+class MyClassA:
+    """Class for mock demo"""
+    def foo(self):
+        """Return a number"""
+        # Assume it does some lengthy computation here (not show)
+        return 100
+    def foo2(self,num):
+        """Return another number"""
+        # Assume it does some lengthy computation here (not show)
+        return num + 200
+    def compute(self):
+        """Demonstrate use of mock objects"""
+        x1 = self.foo()
+        x2 = self.foo2(x1)
+        print("x1 = %d, x2 = %d"%(x1,x2)
+        result = x1 + x2
+        print("In MyClassA.compute, result = x1 + x2=",result)
+        return result
+}}}
+
+- 第二步使用 mock 模拟
+    因为 foo 和 foo2需要花费很长的时间，如果你已经知道这些方法的预期结果，可以用
+    mock 替换
+
+{{{!#python
+import unittest
+from unittest.mock import Mock,call
+
+class Test_compute(self):
+    """Write test cases for methods from class MyClassA"""
+    
+    def test_compute(self):
+        """Unit test for MyClassA.compute"""
+        a  = MyClassA()
+        
+        # Create a mock object and mock methods of MyClassA
+        mockObj = Mock()
+        a.foo = mockObj.foo
+        a..foo2 = mockObj.foo2
+        
+        # Assuming you know the return values, set those for the mocks
+        a.foo.return_value = 100
+        a.foo2.return_value = 300
+        
+        # Run the computation. Calls to foo and foo2 in compute method are
+        # now replaced with mock object calls that return the desired value.
+        result = a.comput()
+        
+        # Verify the results
+        self.asserEqual(result, 400)
+        
+        # Get info on how the mock objects are actully called by compute.
+        test_call_list = mockObj.mock_calls
+        
+        # Compare it against some reference calling order
+        reference_call_list = [call.foo(),call.foo2()]
+        self.assertEqual(test_call_list, reference_call_list)
+
+if __name__ = '__main__':
+    unittest.main()
+
+}}}
+
+==== 通过装饰器（修饰符）操作测试方法 ====
+- 忽略测试方法 对于每个跳过的测试，都会在输出中打印字母 s
+{{{!#python
+@unittest.skip("Skipping test_2"
+def test_2(self):
+    print("in test_2")
+    self.assertEqual(1+1, 2)   
+}}}
+- 预期失败的测试方法 对于每个预期的失败，都会输出答应字母 x
+{{{!#python 
+@unittest.expectedFailure
+def test_2(self):
+    print("in test_2")
+    self.assertEqual(1+1, 2)   
+}}}
+- 
+
+
+== Declarative knowledge ==
+- TestCase.setUp():
+  每个测试执行前被调用。它允许在测试被执行之前初始化一些常见变量。
+- TestCase.tearDown():
+  每个测试执行之后会被调用
+  
+=== Samples ===
+- 一个简单的测试程序
+{{{!#python
+import unittest
+
+class MyUnitTests(unittest.TestCase):
+    def setUp(self):
+        print("In setUp..")
+    
+    def tearDown(self):
+        print("Tearing Down the test.")
+        print("~"*10)
+    
+    def test_2(self):
+        print("in test_2")
+        self.assertEqual(1+1, 2)
+    
+    def test_1(self):
+        print(:in test_1")
+        self.assertTrue(1+1 == 2)
+    
+    def will_not_be_called(self):
+        ''' 非测试方法通常用于在不同的测试之间共享代码'''
+        print("this method will not be called automatically")
+
+if __name__ == '__main__':
+    unittest,main()
+
+}}}
+
+{{{!#python print
+In setUp..
+in test_1
+Tearing Down the test
+~~~~~~~~~~
+In setUp..
+in test_2
+Tearing Down the test
+~~~~~~~~~~
+Ran 2 tests in 0.001s
+
+OK
+}}}
+
+=== Static property ===
+
+= nose 测试框架的使用=
+== summary ==
+nose 是一个完整的测试工具，修复了很多 unittest 的问题，nose 已经成为科学 python
+的标准测试工具。
+
+nose 的优点
+1、编写测试更容易
+2、运行测试更容易
+3、设置测试环境更容易
+4、插件可以帮你做更多的事情
+
+== Object ==
+测试生成器[[testGuide#测试生成器]]
+测试覆盖率[[testGuide#测试覆盖率]]
+== Procedural knowledge ==
+=== Effect ===
+=== Programma ===
+==== 编写测试 ====
+0、导入 import nose
+1、将测试命名为所测试代码加上 test 前缀
+2、载入或设置预期结果
+3、运行代码计算观察结果 
+4、比较预期和观察结果，以确保相等（注意浮点数用近似相等）
+    nose 拥有各种有用的、专用的断言函数，可以通过 nose.tools
+    模块访问这些函数。最为简单的为 assert_equal(期望值,观察值)
+
+==== 运行测试 ====
+nose 的好处是可以自动查找和运行测试
+nose 有一个命令行工具
+nosetests，运行这个命令每个通过的测试在屏幕上打印一个点（.）;失败的测试打印一个F
+，出现意外的打印一个 E ；跳过的打印 S ；
+
+==== 测试生成器 ====
+测试生成器能够自动创建测试，假设有一个需要测试的函数，还有一个长列表，其中含有函数的输入参数和预期结果，此时不用手动为列表的每个元素创建测试，会自动对列表逐一测试。在nose
+中使用 yiel 语句将测试语句转化成生成器。[[testGuide#测试生成器样子]]
+*原理*：在函数体内yield 和 return 只能二选一，使用 yield
+关键字时并不会返回结果，而是返回一个与原函数绑定的生成器对象，对生成器对象连续调用
+python 内置的 next()函数可以不断获得 yield
+语句返回的变量。实际情况就是测试列表中的每个元素（元组），都会终止函数以等待测试结果，通过就继续测试下一个元素。
+
+==== 测试覆盖率 ====
+运行测试套件并计算已执行的代码行数，将其除以软件项目中的总行数就是测试覆盖率
+1、安装
+    ~ pip install coverage
+
+2.0 nose 中的 coverage 的执行
+    ~ nosetests --with-coverage
+        Enable plugin Coverage: Activate a coverage report using Ned
+        Batchelder’s coverage module. [NOSE_WITH_COVERAGE]
+    ~ nosetests --cover-tests
+        Include test modules in coverage report [NOSE_COVER_TESTS]
+        
+2.1、普通 coverage  执行
+    ~ coverage run -m 模块名（就像 import 语句一样，不是路径的写法）&& coverage
+    report
+    sample:
+    cd myporj
+    coverage run -m test.test_myporj && coverage report
+3、注意
+    测试覆盖率的100%是具有一定的欺骗性的。是重要的聊胜于无的工具。
+== Declarative knowledge ==
+=== samples ===
+====普通的 nose 测试样子====
+{{{!#python
+from nose .tools import assert_equal, with_setup
+from mod import f
+def f_setup():
+    # 测试开始之前
+def f_teardown():
+    # 测试完成之后
+
+# 因为 f（）或test_f()函数主体重出现任何意外错误都将导致测试在执行 teardown
+# 函数之前终止,为了保证一定会调用 f_setup和 f_teardown ，必须使用 nose 的
+#  with_setup() 装饰器.
+@with_setup(setup=f_setup,teardown=f_teardown)
+def test_f():
+    exp = 
+    obs = 
+    assert_equal(exp,obs)
+}}}
+
+==== 测试生成器样子 ====
+{{{!#python
+from nose.tools import assert_equal
+
+def add2(x,y):
+    return x + y
+
+def check_add2(exp, x, y):
+    obs = add2(x, y)
+    assert_equal(exp,obs)
+    
+def test_add2():
+    cases = [
+        (4, 2, 2),
+        (5, -5, 10),
+        (42, 40, 2),
+        (16, 3 , 13),
+        (-128, 0, -128),
+        ]
+        
+    for exp, x, y in cases:
+        yield check_add2, exp, x, y # 注意写法
+
+}}}
+=== Static property ===
+
+= doctest 和文档驱动开发 DDD =
+== summary ==
+doctest是python自带的一个模。块doctest的两种使用方式：一种是嵌入到python源码中，另外一种是放到一个独立文件。
+== Object ==
+== Procedural knowledge ==
+=== Effect ===
+==== doctest嵌入源码中====
+有两个地方可以放doctest测试用例，一个位置是模块的最开头，另一个位置是函数声明语句的下一行（就像上面的例子这样）。除此之外的其它地方不能放，放了也不会执行。
+
+- unnecessary_math.py:
+
+{{{!#python
+'''
+这个例子展示如何在源码中嵌入doctest用例。
+'>>>' 开头的行就是doctest测试用例。
+不带 '>>>' 的行就是测试用例的输出。
+如果实际运行的结果与期望的结果不一致，就标记为测试失败。
+'''
+def multiply(a, b):
+    """
+    >>> multiply(4, 3)
+    12
+    >>> multiply('a', 3)
+    'aaa'
+    """
+     return a * b
+if __name__=='__main__':
+    import doctest
+    doctest.testmod(verbose=True)
+    #verbose参数，如果设置为True则在执行测试的时候会输出详细信息。默认是False，表示运行测试时，只有失败的用例会输出详细信息，成功的测试用例不会输入任何信息。
+
+}}}
+
+执行
+    ~ python unnecessary_math.py
+
+如果__main__函数有其他用途，不方便调用doctest.testmod()方法，那么可以用另外一种执行测试的方法：
+    ~ python -m doctest unnecessary_math.py
+    ~ python -m doctest -v unnecessary_math.py
+        这里 -m 表示引用一个模块，-v 等价于 verbose=True。运行输出与上面基本一样
+        
+==== doctest独立文件 ====
+如果不想将doctest测试用例嵌入到python的源码中，则可以建立一个独立的文本文件来保存测试用例。 
+将doctest测试用例从上面的python源码中剥离出来放到README.txt文件里。
+
+    这个例子展示如何将doctest用例放到一个独立的文件中。
+    '>>>' 开头的行就是doctest测试用例。
+    不带 '>>>' 的行就是测试用例的输出。
+    如果实际运行的结果与期望的结果不一致，就标记为测试失败。 
+    
+    >>> from unnecessary_math import multiply
+    >>> multiply(3, 4)
+    12
+    >>> multiply('a', 3)
+    'aaa'
+
+注意：from 那一行也要以>>>开头。
+
+执行方式：在 shell 里执行
+ 
+nosetests --doctest-tests
+
+    --with-doctest
+    Enable plugin Doctest: Activate doctest plugin to find and run doctests in
+    non-test modules. [NOSE_WITH_DOCTEST]
+    启用插件:激活Doctest插件来查找和运行非测试模块中的doctests。
+    
+    
+    --doctest-tests
+    Also look for doctests in test modules. Note that classes, methods and
+    functions should have either doctests or non-doctest tests, not both.
+    [NOSE_DOCTEST_TESTS]
+    还可以在测试模块中查找文档。请注意，类、方法和函数应具有DOCTREST或非DOCTREST测试，而不是两者兼备。
+
+nosetests 
+
+=== Programma ===
+== Declarative  knowledge==
+=== Static property ===
