@@ -21,4 +21,13 @@ https://github.com/powerline/fonts 下载，然后运行install.sh
 chsh -s /bin/zsh  然后重启iTerm2
 （如果你哪一天又想用bash了，也可以使用下列命令：chsh -s /bin/bash）
 
+ 
+安装 oh my zsh
+1、在.zshrc文件里修改路径,eg:huyi_fenghuang
+  # Path to your oh-my-zsh installation.
+  export ZSH="/Users/huyi_fenghuang/.oh-my-zsh"
+
+2、安装
+curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+
 
