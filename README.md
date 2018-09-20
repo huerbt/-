@@ -7,3 +7,18 @@
 # -安装iTerm2 并配置
 
 Key -- HotKey 勾选show/hide all……
+
+
+# -安装 Vundle
+git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/Vundle.vim
+
+完成后打开 vim，输入 :PluginInstall，开始安装。
+
+安装 vim-airline/vim-airline 的打过补丁的字体
+https://github.com/powerline/fonts 下载，然后运行install.sh
+
+# -把bash切换成zsh
+chsh -s /bin/zsh  然后重启iTerm2
+（如果你哪一天又想用bash了，也可以使用下列命令：chsh -s /bin/bash）
+
+
