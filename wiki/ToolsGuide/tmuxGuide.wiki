@@ -64,7 +64,7 @@ windows:
         - vim # 第一个pane运行vim命令
         - guard # 第二个pane运行guard命令
   - server: bundle exec rails s # 第2个名为server的window，运行命令为bundle
-  - logs: tail -f log/development.log # 第3个名为logs的window，运行命令为tail
+  - logs: tail -f log/development.log # 第4个名为logs的window，运行命令为tail
 
 
 工程配置中的layout项，有5个默认的值。
