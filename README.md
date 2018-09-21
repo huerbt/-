@@ -27,7 +27,10 @@ chsh -s /bin/zsh  然后重启iTerm2
   # Path to your oh-my-zsh installation.
   export ZSH="/Users/huyi_fenghuang/.oh-my-zsh"
 
-2、安装
+3、如果遇到权限提示，在.zshrc中添加如下语句
+export ZSH_DISABLE_COMPFIX=true
+
+2、如需重新安装，执行如下命令
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
 
 
